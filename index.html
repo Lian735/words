@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wortanimation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(to right, #ff7e5f, #feb47b);
+            font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+        }
+        #container {
+            text-align: center;
+        }
+        input[type="text"] {
+            padding: 10px;
+            font-size: 20px;
+            border-radius: 5px;
+            border: 2px solid #fff;
+            outline: none;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #fff;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ddd;
+        }
+        .letter {
+            position: absolute;
+            font-size: 40px;
+            color: white;
+            transition: all 1s ease;
+        }
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+        .bounce {
+            animation: bounce 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <input type="text" id="wordInput" placeholder="Gib ein Wort ein">
+        <button onclick="animateWord()">Fertig</button>
+    </div>
+    <script>
+        function animateWord() {
+            const input = document.getElementById('wordInput').value;
+            const container = document.getElementById('container');
+            container.innerHTML = '';
+            const letters = input.split('');
+            const shuffledLetters = letters.sort(() => Math.random() - 0.5);
+            
+            shuffledLetters.forEach((letter, index) => {
+                const span = document.createElement('span');
+                span.className = 'letter';
+                span.innerText = letter;
+                span.style.left = `${index * 50}px`;
+                span.style.bottom = '0';
+                container.appendChild(span);
+                
+                setTimeout(() => {
+                    span.style.bottom = '100vh';
+                    span.style.left = '0';
+                }, 100);
+
+                setTimeout(() => {
+                    span.style.bottom = '50vh';
+                    span.style.left = `${(window.innerWidth / 2) - (letters.length * 25) + (index * 50)}px`;
+                    span.classList.add('bounce');
+                }, 1500);
+            });
+        }
+    </script>
+</body>
+</html>
