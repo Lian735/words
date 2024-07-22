@@ -24,9 +24,10 @@
         }
         #inputArea {
             position: absolute;
-            bottom: 20px;
+            bottom: 10%;
             left: 50%;
             transform: translateX(-50%);
+            display: flex;
         }
         input[type="text"] {
             padding: 15px;
@@ -123,7 +124,7 @@
                 span.className = 'letter';
                 span.innerText = letter;
                 span.style.top = '0';
-                span.style.left = `${(window.innerWidth / 2) - (letters.length * 20) + (index * 30)}px`;
+                span.style.left = `${(window.innerWidth / 2) - (letters.length * 20) + (index * 40)}px`;
                 container.appendChild(span);
                 
                 setTimeout(() => {
@@ -137,7 +138,7 @@
                 setTimeout(() => {
                     span.classList.remove('fall');
                     span.classList.add('rise');
-                    span.style.left = `${(window.innerWidth / 2) - (letters.length * 20) + (index * 30)}px`;
+                    span.style.left = `${(window.innerWidth / 2) - (letters.length * 20) + (index * 40)}px`;
                 }, 1500);
 
                 setTimeout(() => {
@@ -146,7 +147,7 @@
             });
 
             setTimeout(() => {
-                inputArea.style.display = 'block';
+                inputArea.style.display = 'flex';
             }, 3000);
         }
     </script>
