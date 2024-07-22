@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pixel Auto</title>
     <style>
         body {
@@ -72,19 +72,19 @@
         const carHeight = 40;
         const wheelSize = 20;
 
-        const carBody = Bodies.rectangle(200, terrainHeight / 2 - carHeight, carWidth, carHeight, {
+        const carBody = Bodies.rectangle(100, terrainHeight / 2 - carHeight, carWidth, carHeight, {
             render: {
                 fillStyle: '#FF0000'
             }
         });
 
-        const wheelA = Bodies.circle(180, terrainHeight / 2, wheelSize, {
+        const wheelA = Bodies.circle(80, terrainHeight / 2, wheelSize, {
             render: {
                 fillStyle: '#000000'
             }
         });
 
-        const wheelB = Bodies.circle(220, terrainHeight / 2, wheelSize, {
+        const wheelB = Bodies.circle(120, terrainHeight / 2, wheelSize, {
             render: {
                 fillStyle: '#000000'
             }
