@@ -9,16 +9,24 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-direction: column;
             height: 100vh;
             margin: 0;
             background: linear-gradient(to right, #ff7e5f, #feb47b);
             font-family: 'Arial Rounded MT Bold', 'Helvetica Rounded', Arial, sans-serif;
+            overflow: hidden;
         }
         #container {
             text-align: center;
             position: relative;
             width: 100%;
             height: 100%;
+        }
+        #inputArea {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
         }
         input[type="text"] {
             padding: 15px;
@@ -50,9 +58,35 @@
         }
         .letter {
             position: absolute;
-            font-size: 5vw;
+            font-size: 4vw;
             color: white;
             transition: all 1s ease;
+        }
+        @keyframes fall {
+            0% {
+                top: 0;
+                opacity: 1;
+            }
+            100% {
+                top: 100vh;
+                opacity: 0;
+            }
+        }
+        @keyframes rise {
+            0% {
+                top: -10vh;
+                opacity: 0;
+            }
+            100% {
+                top: 50vh;
+                opacity: 1;
+            }
+        }
+        .fall {
+            animation: fall 1s forwards;
+        }
+        .rise {
+            animation: rise 1s forwards;
         }
         @keyframes bounce {
             0%, 100% {
@@ -69,14 +103,18 @@
 </head>
 <body>
     <div id="container">
-        <input type="text" id="wordInput" placeholder="Schreib etwas...">
-        <button onclick="animateWord()">Fertig</button>
+        <div id="inputArea">
+            <input type="text" id="wordInput" placeholder="Schreib etwas...">
+            <button onclick="animateWord()">Fertig</button>
+        </div>
     </div>
     <script>
         function animateWord() {
             const input = document.getElementById('wordInput').value;
             const container = document.getElementById('container');
-            container.innerHTML = `<input type="text" id="wordInput" placeholder="Schreib etwas..."><button onclick="animateWord()">Fertig</button>`;
+            const inputArea = document.getElementById('inputArea');
+            inputArea.style.display = 'none';
+
             const letters = input.split('');
             const shuffledLetters = letters.sort(() => Math.random() - 0.5);
             
@@ -85,19 +123,31 @@
                 span.className = 'letter';
                 span.innerText = letter;
                 span.style.top = '0';
-                span.style.left = `${(window.innerWidth / 2) - (letters.length * 20) + (index * 40)}px`;
+                span.style.left = `${(window.innerWidth / 2) - (letters.length * 20) + (index * 30)}px`;
                 container.appendChild(span);
                 
                 setTimeout(() => {
-                    span.style.top = '100vh';
+                    span.classList.add('fall');
                 }, 100);
 
                 setTimeout(() => {
-                    span.style.top = '50vh';
-                    span.style.left = `${(window.innerWidth / 2) - (letters.length * 20) + (index * 40)}px`;
-                    span.classList.add('bounce');
+                    span.style.top = '-10vh';
+                }, 1100);
+
+                setTimeout(() => {
+                    span.classList.remove('fall');
+                    span.classList.add('rise');
+                    span.style.left = `${(window.innerWidth / 2) - (letters.length * 20) + (index * 30)}px`;
                 }, 1500);
+
+                setTimeout(() => {
+                    span.classList.add('bounce');
+                }, 2500);
             });
+
+            setTimeout(() => {
+                inputArea.style.display = 'block';
+            }, 3000);
         }
     </script>
 </body>
