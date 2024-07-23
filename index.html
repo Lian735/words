@@ -11,9 +11,8 @@
             margin: 0;
             padding: 0;
             display: flex;
-            justify-content: center;
-            align-items: center;
             flex-direction: column;
+            align-items: center;
         }
 
         header {
@@ -24,6 +23,18 @@
             text-align: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        header img {
+            height: 40px;
+            margin-right: 15px;
+        }
+
+        header h1 {
+            margin: 0;
         }
 
         .product-list {
@@ -64,23 +75,17 @@
             color: #333;
         }
 
-        .product-info p {
-            color: #777;
-            font-size: 0.9em;
-        }
-
-        .product-info .like-button {
-            background-color: #ff5e5e;
-            color: white;
+        .like-button {
+            background: none;
             border: none;
-            border-radius: 5px;
-            padding: 10px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 1.5em;
+            color: gray;
+            transition: color 0.3s ease;
         }
 
-        .product-info .like-button:hover {
-            background-color: #ff3030;
+        .like-button.liked {
+            color: red;
         }
 
         .product-info a {
@@ -98,41 +103,41 @@
 </head>
 <body>
     <header>
+        <img src="https://via.placeholder.com/40" alt="Logo">
         <h1>ShopLove</h1>
-        <p>Deine Lieblingsprodukte auf einen Blick</p>
     </header>
     <div class="product-list" id="productList">
         <!-- Produkte werden hier dynamisch eingefügt -->
     </div>
 
     <script>
-        const products = [
-            { img: 'https://via.placeholder.com/200', title: 'Produkt 1', description: 'Beschreibung 1', link: '#' },
-            { img: 'https://via.placeholder.com/200', title: 'Produkt 2', description: 'Beschreibung 2', link: '#' },
-            { img: 'https://via.placeholder.com/200', title: 'Produkt 3', description: 'Beschreibung 3', link: '#' },
-            { img: 'https://via.placeholder.com/200', title: 'Produkt 4', description: 'Beschreibung 4', link: '#' },
-            // Mehr Produkte hier hinzufügen...
-        ];
-
-        function loadProducts() {
+        document.addEventListener('DOMContentLoaded', function() {
             const productList = document.getElementById('productList');
-            products.forEach(product => {
-                const productElement = document.createElement('div');
-                productElement.className = 'product';
-                productElement.innerHTML = `
-                    <img src="${product.img}" alt="${product.title}">
-                    <div class="product-info">
-                        <h3>${product.title}</h3>
-                        <p>${product.description}</p>
-                        <button class="like-button">Like</button>
-                        <a href="${product.link}" target="_blank">Zum Produkt</a>
-                    </div>
-                `;
-                productList.appendChild(productElement);
-            });
-        }
+            const apiUrl = 'https://fakestoreapi.com/products';
 
-        document.addEventListener('DOMContentLoaded', loadProducts);
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(products => {
+                    products.forEach(product => {
+                        const productElement = document.createElement('div');
+                        productElement.className = 'product';
+                        productElement.innerHTML = `
+                            <img src="${product.image}" alt="${product.title}">
+                            <div class="product-info">
+                                <h3>${product.title}</h3>
+                                <button class="like-button" onclick="toggleLike(this)">&#9825;</button>
+                                <a href="${product.link}" target="_blank">Zum Produkt</a>
+                            </div>
+                        `;
+                        productList.appendChild(productElement);
+                    });
+                });
+
+            window.toggleLike = function(button) {
+                button.classList.toggle('liked');
+                button.innerHTML = button.classList.contains('liked') ? '&#9829;' : '&#9825;';
+            };
+        });
     </script>
 </body>
 </html>
