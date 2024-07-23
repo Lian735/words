@@ -4,49 +4,76 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Maler-Webapp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             margin: 0;
             padding: 0;
             font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
         }
         .toolbar {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: center;
             padding: 10px;
-            background-color: #f0f0f0;
-            border-bottom: 1px solid #ccc;
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .toolbar button, .toolbar input[type="file"], .toolbar input[type="color"], .toolbar input[type="range"] {
+            border: none;
+            background: transparent;
+            margin: 0 10px;
+            cursor: pointer;
+            font-size: 1.5em;
+        }
+        .toolbar input[type="file"] {
+            display: none;
+        }
+        .toolbar input[type="range"] {
+            width: 100px;
+        }
+        .toolbar input[type="color"] {
+            width: 50px;
+            height: 30px;
+            padding: 0;
         }
         #canvas {
-            border: 1px solid #ccc;
-            display: block;
-            margin: 0 auto;
-            background-color: #fff;
+            border-radius: 15px;
+            border: 2px solid #ccc;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80vw;
+            height: 70vh;
+            margin-bottom: 20px;
         }
         .dark-mode #canvas {
             background-color: #333;
+            border-color: #555;
         }
         .dark-mode .toolbar {
             background-color: #444;
             color: #fff;
         }
-        .hidden {
-            display: none;
-        }
     </style>
 </head>
 <body>
     <div class="toolbar">
-        <button id="toggleMode">Toggle Dark/Light Mode</button>
+        <button id="toggleMode" title="Dunkel-/Hellmodus"><i class="fas fa-moon"></i></button>
         <input type="file" id="uploadFile" />
-        <button id="downloadFile">Download als PNG</button>
-        <button id="showGrid">Raster ein-/ausblenden</button>
-        <label for="brushSize">Stiftgröße:</label>
+        <button id="downloadFile" title="Download als PNG"><i class="fas fa-download"></i></button>
+        <button id="showGrid" title="Raster ein-/ausblenden"><i class="fas fa-th"></i></button>
+        <label for="brushSize" title="Stiftgröße"><i class="fas fa-pencil-alt"></i></label>
         <input type="range" id="brushSize" min="1" max="50" value="5" />
-        <label for="brushColor">Stiftfarbe:</label>
+        <label for="brushColor" title="Stiftfarbe"><i class="fas fa-tint"></i></label>
         <input type="color" id="brushColor" value="#000000" />
-        <button id="addText">Text hinzufügen</button>
+        <button id="addText" title="Text hinzufügen"><i class="fas fa-font"></i></button>
     </div>
     <canvas id="canvas"></canvas>
     <script>
@@ -65,8 +92,8 @@
             let darkMode = false;
             let showGrid = false;
 
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+            canvas.width = window.innerWidth * 0.8;
+            canvas.height = window.innerHeight * 0.7;
 
             function toggleDarkMode() {
                 darkMode = !darkMode;
@@ -111,6 +138,7 @@
                 reader.onload = (e) => {
                     const img = new Image();
                     img.onload = () => {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
                         ctx.drawImage(img, 0, 0);
                         drawGrid();
                     };
