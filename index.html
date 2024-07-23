@@ -1,140 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pixel Auto</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Summarizer und Marker</title>
     <style>
         body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
             margin: 0;
-            overflow: hidden;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-        canvas {
-            display: block;
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            font-size: 16px;
+            resize: none;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            line-height: 1.6;
+        }
+        .highlight {
+            background-color: yellow;
+            transition: background-color 0.5s ease;
         }
     </style>
 </head>
 <body>
-    <canvas id="world"></canvas>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.17.1/matter.min.js"></script>
+    <div class="container">
+        <h1>Text Summarizer und Marker</h1>
+        <textarea id="textInput" placeholder="Geben Sie hier Ihren Text ein..."></textarea>
+        <div class="button-container">
+            <button onclick="summarizeText()">Summarize</button>
+            <button onclick="highlightText()">Marker</button>
+        </div>
+        <div class="result" id="result"></div>
+    </div>
     <script>
-        const { Engine, Render, Runner, Bodies, Composite, Body, Events } = Matter;
-
-        // Create engine
-        const engine = Engine.create();
-        const world = engine.world;
-
-        // Create renderer
-        const render = Render.create({
-            element: document.body,
-            canvas: document.getElementById('world'),
-            engine: engine,
-            options: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                wireframes: false,
-                background: '#87CEEB'
-            }
-        });
-
-        Render.run(render);
-
-        // Create runner
-        const runner = Runner.create();
-        Runner.run(runner, engine);
-
-        // Create terrain
-        const terrain = [];
-        const terrainWidth = 2000;
-        const terrainHeight = window.innerHeight - 100;
-        const segments = 50;
-        const segmentWidth = terrainWidth / segments;
-        let lastHeight = terrainHeight / 2;
-
-        for (let i = 0; i <= segments; i++) {
-            const x = i * segmentWidth;
-            const y = lastHeight + (Math.random() * 100 - 50);
-            terrain.push({ x, y });
-            lastHeight = y;
+        function summarizeText() {
+            const text = document.getElementById('textInput').value;
+            const sentences = text.split('. ');
+            const summary = sentences.slice(0, Math.ceil(sentences.length / 2)).join('. ') + (sentences.length > 1 ? '.' : '');
+            document.getElementById('result').innerText = summary;
         }
 
-        const terrainVertices = terrain.map(point => ({ x: point.x, y: point.y })).concat([
-            { x: terrainWidth, y: window.innerHeight },
-            { x: 0, y: window.innerHeight }
-        ]);
+        function highlightText() {
+            const text = document.getElementById('textInput').value;
+            const importantWords = ['wichtig', 'zentral', 'bedeutend']; // Beispiel wichtiger Wörter
+            let highlightedText = text;
 
-        const terrainBody = Bodies.fromVertices(terrainWidth / 2, terrainHeight / 2, [terrainVertices], { isStatic: true, render: { fillStyle: '#8B4513' } });
-        Composite.add(world, terrainBody);
-
-        // Create car
-        const carWidth = 80;
-        const carHeight = 40;
-        const wheelSize = 20;
-
-        const carBody = Bodies.rectangle(100, terrainHeight / 2 - carHeight, carWidth, carHeight, {
-            render: {
-                fillStyle: '#FF0000'
-            }
-        });
-
-        const wheelA = Bodies.circle(80, terrainHeight / 2, wheelSize, {
-            render: {
-                fillStyle: '#000000'
-            }
-        });
-
-        const wheelB = Bodies.circle(120, terrainHeight / 2, wheelSize, {
-            render: {
-                fillStyle: '#000000'
-            }
-        });
-
-        const axleA = Matter.Constraint.create({
-            bodyA: carBody,
-            pointA: { x: -carWidth / 2 + wheelSize, y: carHeight / 2 },
-            bodyB: wheelA,
-            stiffness: 0.2,
-            length: 0
-        });
-
-        const axleB = Matter.Constraint.create({
-            bodyA: carBody,
-            pointA: { x: carWidth / 2 - wheelSize, y: carHeight / 2 },
-            bodyB: wheelB,
-            stiffness: 0.2,
-            length: 0
-        });
-
-        Composite.add(world, [carBody, wheelA, wheelB, axleA, axleB]);
-
-        // Follow the car
-        Events.on(engine, 'beforeTick', () => {
-            const offsetX = -carBody.position.x + render.options.width / 4;
-            const offsetY = -carBody.position.y + render.options.height / 2;
-            Render.lookAt(render, {
-                min: { x: carBody.position.x - render.options.width / 2, y: carBody.position.y - render.options.height / 2 },
-                max: { x: carBody.position.x + render.options.width / 2, y: carBody.position.y + render.options.height / 2 }
+            importantWords.forEach(word => {
+                const regex = new RegExp(`(${word})`, 'gi');
+                highlightedText = highlightedText.replace(regex, '<span class="highlight">$1</span>');
             });
-        });
 
-        // Move car
-        const forceMagnitude = 0.01;
-        const applyForce = () => {
-            Body.applyForce(carBody, carBody.position, { x: forceMagnitude, y: 0 });
-        };
-
-        setInterval(applyForce, 50);
-
-        // Resize canvas
-        window.addEventListener('resize', () => {
-            render.canvas.width = window.innerWidth;
-            render.canvas.height = window.innerHeight;
-            Render.lookAt(render, {
-                min: { x: carBody.position.x - render.options.width / 2, y: carBody.position.y - render.options.height / 2 },
-                max: { x: carBody.position.x + render.options.width / 2, y: carBody.position.y + render.options.height / 2 }
-            });
-        });
+            document.getElementById('result').innerHTML = highlightedText;
+        }
     </script>
 </body>
 </html>
