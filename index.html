@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(to bottom, #ff5e5e, #ff9e9e);
+            background: linear-gradient(to bottom, #333, #555);
             margin: 0;
             padding: 0;
             display: flex;
@@ -18,7 +18,7 @@
         }
 
         header {
-            background-color: #ff5e5e;
+            background-color: #222;
             color: white;
             width: 100%;
             padding: 20px;
@@ -40,16 +40,16 @@
         }
 
         .product {
-            background-color: white;
+            background-color: #444;
             border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .product:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
         }
 
         .product img {
@@ -65,7 +65,7 @@
         .product-info h3 {
             margin: 0;
             font-size: 1.1em;
-            color: #333;
+            color: #fff;
         }
 
         .like-button {
@@ -105,18 +105,19 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const productList = document.getElementById('productList');
-            const apiUrl = 'https://fakestoreapi.com/products';
+            const apiUrl = 'https://dummyjson.com/products';
             let page = 1;
 
             function fetchProducts() {
-                fetch(`${apiUrl}?limit=10&page=${page}`)
+                fetch(`${apiUrl}?limit=10&skip=${(page - 1) * 10}`)
                     .then(response => response.json())
-                    .then(products => {
+                    .then(data => {
+                        const products = data.products;
                         products.forEach(product => {
                             const productElement = document.createElement('div');
                             productElement.className = 'product';
                             productElement.innerHTML = `
-                                <img src="${product.image}" alt="${product.title}">
+                                <img src="${product.thumbnail}" alt="${product.title}">
                                 <div class="product-info">
                                     <h3>${product.title}</h3>
                                     <button class="like-button" onclick="toggleLike(this)">&#9825;</button>
