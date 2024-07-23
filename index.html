@@ -7,9 +7,9 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(-45deg, #b24545, #8b0000);
+            background: linear-gradient(45deg, #8b0000, #b24545, #ff6347, #ff8c00);
             background-size: 400% 400%;
-            animation: gradient 10s ease infinite;
+            animation: gradient 15s ease infinite;
             margin: 0;
             padding: 0;
             display: flex;
@@ -60,6 +60,7 @@
             gap: 20px;
             width: 80%;
             margin: 80px auto 20px auto;
+            justify-content: center;
         }
 
         .product {
@@ -68,6 +69,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
         }
 
         .product:hover {
