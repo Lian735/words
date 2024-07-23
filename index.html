@@ -7,7 +7,7 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: linear-gradient(-45deg, #232526, #414345);
+            background: linear-gradient(-45deg, #ff9a9e, #fad0c4, #fad0c4, #ff9a9e);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
             margin: 0;
@@ -163,8 +163,8 @@
                 button.classList.toggle('liked');
                 productElement.classList.toggle('liked');
                 button.innerHTML = button.classList.contains('liked') ? '&#9829;' : '&#9825;';
-                if (button.classList.contains('liked') && window.navigator.vibrate) {
-                    window.navigator.vibrate(100);
+                if (button.classList.contains('liked') && 'vibrate' in navigator) {
+                    navigator.vibrate(100);
                 }
             };
 
